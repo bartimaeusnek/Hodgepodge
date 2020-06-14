@@ -52,7 +52,7 @@ object ModMixinsMod {
                             event.toolTip.add("Produces ${LoadingConfig.furnacePullution*20} Pollution/Second")
                         }
                     }
-                if (LoadingConfig.fixRailcraftBoilerPollution && Loader.isModLoaded("railcraft")) {
+                if (LoadingConfig.fixRailcraftBoilerPollution && Loader.isModLoaded("Railcraft")) {
                     when {
                         GT_Utility.areStacksEqual(event.itemStack, ItemStack(RailcraftBlocks.getBlockMachineBeta(), 1, EnumMachineBeta.BOILER_FIREBOX_SOLID.ordinal)) -> {
                             event.toolTip.add("Produces 40 Pollution/Second")
