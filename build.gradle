@@ -91,7 +91,7 @@ idea.module.inheritOutputDirs = true
 //########################################    Mixin  Part   ################################################
 //##########################################################################################################
 def yourMixinConfig = 'mixins.modmixins.json'
-//def refMapForYourConfig = 'mixins.modmixins.refmap.json'
+def refMapForYourConfig = 'mixins.modmixins.refmap.json'
 
 repositories {
     maven {
@@ -120,12 +120,12 @@ dependencies {
     }
 }
 
-//def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + refMapForYourConfig
-//
-//def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
+def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + refMapForYourConfig
+
+def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
 
 jar {
-//    from refMap
+    from refMap
     manifest {
         attributes.put("TweakClass", "org.spongepowered.asm.launch.MixinTweaker")
         //attributes.put("FMLCorePluginContainsFMLMod", true)
@@ -137,12 +137,17 @@ jar {
 kapt {
     correctErrorTypes = true
     includeCompileClasspath = false
+    javacOptions {
+        option("-AreobfSrgFile=${tasks.reobf.srg}")
+        option("-AoutSrgFile=${mixinSrg}")
+        option("-AoutRefMapFile=${refMap}")
+    }
 }
-/*
+
 reobf {
     addExtraSrgFile mixinSrg
 }
-*/
+
 afterEvaluate {
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 		kotlinOptions {
@@ -151,9 +156,9 @@ afterEvaluate {
     }
 }
 
-//sourceSets {
-//    main {
-//        output.resourcesDir = output.classesDir
-//        ext.refMap = refMapForYourConfig
-//    }
-//}
+sourceSets {
+    main {
+        output.resourcesDir = output.classesDir
+        ext.refMap = refMapForYourConfig
+    }
+}

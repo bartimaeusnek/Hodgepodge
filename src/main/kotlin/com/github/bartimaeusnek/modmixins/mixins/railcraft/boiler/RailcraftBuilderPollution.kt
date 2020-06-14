@@ -26,9 +26,9 @@ class RailcraftBuilderPollution {
             tile?.also {
                 val pollution =
                         when (it) {
-                            is TileMultiBlock -> (tile as TileMultiBlock).components.size * 10
-                            is TileEngineSteamHobby -> 5
-                            else -> 8
+                            is TileMultiBlock -> (tile as TileMultiBlock).components.size * 2
+                            is TileEngineSteamHobby -> 1
+                            else -> 2
                         }
                 GT_Pollution.addPollution(this.tile!!.world.getChunkFromBlockCoords(this.tile!!.x, this.tile!!.z), pollution)
             }

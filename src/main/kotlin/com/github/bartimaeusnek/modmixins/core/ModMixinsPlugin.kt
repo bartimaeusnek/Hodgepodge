@@ -57,15 +57,28 @@ class ModMixinsPlugin : IMixinConfigPlugin {
 
     /**
      * @param fixname = name of the fix, i.e. My Awesome addition
-     * @param applyIf = confition to apply this fix, i.e. ThermosLoaded = false && config == true
-     * @param jar = the jar of the mod if the jar doesn contain a coremod
+     * @param applyIf = condition to apply this fix, i.e. ThermosLoaded = false && config == true
+     * @param jar = the jar of the mod if the jar doesn't contain a core-mod
      * @param mixinClasses = the mixins classes to be applied for this patch
      */
-    enum class MixinSets(val fixname: String, private val applyIf: () -> Boolean, private val jar: File?, vararg val mixinClasses: String) {
-        RAILCRAFT_BOILER_POLLUTION_FIX("Railcraft Boiler Pollution addition",
+    enum class MixinSets(val fixname: String, private val applyIf: () -> Boolean, private val jar: File?, val mixinClasses: Array<String>)
+    {
+        RAILCRAFT_BOILER_POLLUTION_FIX (
+                "Railcraft Boiler Pollution addition",
                 { LoadingConfig.fixRailcraftBoilerPollution },
                 File(Launch.minecraftHome, "mods/${LoadingConfig.RailcraftJarName}"),
-                "railcraft.boiler.RailcraftBuilderPollution");
+                "railcraft.boiler.RailcraftBuilderPollution"),
+        FURNACE_ADD_POLLUTION (
+                "Furnace Pollution Fix",
+                { LoadingConfig.fixVanillaFurnacePollution },
+                arrayOf(
+                        "vanilla.tileentity.TileEntityFurnacePollution",
+                        "ic2.tileentity.IronFurnacePollution"
+                )
+        );
+        constructor(fixname: String, applyIf: () -> Boolean, mixinClasses : Array<String>) : this(fixname, applyIf,null, mixinClasses)
+        constructor(fixname: String, applyIf: () -> Boolean, jar: File?, mixinClasses : String) : this(fixname, applyIf, jar, arrayOf(mixinClasses))
+        constructor(fixname: String, applyIf: () -> Boolean, mixinClasses : String) : this(fixname, applyIf,null, mixinClasses)
 
         fun shouldBeLoaded() : Boolean {
             return applyIf.invoke()
