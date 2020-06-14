@@ -19,10 +19,12 @@ import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.ItemTooltipEvent
+import thaumcraft.api.ItemApi
+import thaumcraft.api.ThaumcraftApi
 
 
 @Mod(modid = MODID, version = VERSION, name = NAME, acceptableRemoteVersions = "*",
-        dependencies = "required-after:spongemixins@[1.1.0;", modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter")
+        dependencies = "required-after:spongemixins@[1.1.0; required-after: forgelin;", modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter")
 object ModMixinsMod {
     const val MODID = "ModMixins"
     const val VERSION = "0.0.1"
@@ -43,7 +45,7 @@ object ModMixinsMod {
         fun getTooltip(event : ItemTooltipEvent?)
         {
             event?.itemStack?.also{
-                if (LoadingConfig.fixVanillaFurnacePollution)
+                if (LoadingConfig.fixVanillaFurnacePollution){
                     when {
                         GT_Utility.areStacksEqual(event.itemStack, ItemStack(Blocks.furnace)) -> {
                             event.toolTip.add("Produces ${LoadingConfig.furnacePullution*20} Pollution/Second")
@@ -52,6 +54,10 @@ object ModMixinsMod {
                             event.toolTip.add("Produces ${LoadingConfig.furnacePullution*20} Pollution/Second")
                         }
                     }
+                    if (Loader.isModLoaded("thaumcraft"))
+                        if (GT_Utility.areStacksEqual(event.itemStack, ItemApi.getBlock("blockArcaneFurnace",0)))
+                            event.toolTip.add("Produces ${LoadingConfig.furnacePullution*20} Pollution/Second")
+                }
                 if (LoadingConfig.fixRailcraftBoilerPollution && Loader.isModLoaded("Railcraft")) {
                     when {
                         GT_Utility.areStacksEqual(event.itemStack, ItemStack(RailcraftBlocks.getBlockMachineBeta(), 1, EnumMachineBeta.BOILER_FIREBOX_SOLID.ordinal)) -> {

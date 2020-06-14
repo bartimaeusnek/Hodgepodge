@@ -75,6 +75,13 @@ class ModMixinsPlugin : IMixinConfigPlugin {
                         "vanilla.tileentity.TileEntityFurnacePollution",
                         "ic2.tileentity.IronFurnacePollution"
                 )
+        ),
+        TC_FURNACE_ADD_POLLUTION (
+                "Thaumcraft Furnace Pollution Fix",
+                { LoadingConfig.fixThaumcraftFurnacePollution },
+                arrayOf(
+                        "thaumcraft.tileentity.AlchemicalConstructPollutionAdder"
+                )
         );
         constructor(fixname: String, applyIf: () -> Boolean, mixinClasses : Array<String>) : this(fixname, applyIf,null, mixinClasses)
         constructor(fixname: String, applyIf: () -> Boolean, jar: File?, mixinClasses : String) : this(fixname, applyIf, jar, arrayOf(mixinClasses))
